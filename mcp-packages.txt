@@ -1,0 +1,4 @@
+# Pre-install MCP servers (optional, for faster startup)
+# One command per line. Example:
+# npm install -g @playwright/mcp
+# pip install mcp-server-fetch
