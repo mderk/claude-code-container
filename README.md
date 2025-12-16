@@ -9,6 +9,23 @@ Containerized Claude Code with `--dangerously-skip-permissions`. The container p
 make build
 ```
 
+## Authentication
+
+Docker containers don't have access to macOS Keychain where Claude stores OAuth tokens. Set up a long-lived token:
+
+```bash
+# 1. Generate token (requires Claude subscription)
+claude setup-token
+
+# 2. Save token to file (use -n to avoid newline)
+echo -n "YOUR_TOKEN" > ~/.claude/.oauth_token
+chmod 600 ~/.claude/.oauth_token
+```
+
+The token is automatically loaded on each container start.
+
+**Alternative:** Set `CLAUDE_CODE_OAUTH_TOKEN` environment variable.
+
 ## Usage
 
 ```bash
@@ -68,7 +85,8 @@ Edit the Dockerfile directly and rebuild.
 
 ## How It Works
 
--   Mounts `~/.claude` and `~/.claude.json` for settings and credentials
+-   Loads OAuth token from `~/.claude/.oauth_token` or `CLAUDE_CODE_OAUTH_TOKEN` env var
+-   Mounts `~/.claude` and `~/.claude.json` for settings, history and credentials
 -   Mounts `~/.config` (read-only) for statusline and other tool configs
 -   Mounts your project directory at the same path as on host
 -   Mounts Docker socket for container management
@@ -77,10 +95,10 @@ Edit the Dockerfile directly and rebuild.
 
 ## Mounted Paths
 
-| Host Path              | Container Path         | Access |
-| ---------------------- | ---------------------- | ------ |
-| `~/.claude/`           | `~/.claude/`           | rw     |
-| `~/.claude.json`       | `~/.claude.json`       | rw     |
-| `~/.config/`           | `~/.config/`           | ro     |
-| `<project>`            | `<project>`            | rw     |
-| `/var/run/docker.sock` | `/var/run/docker.sock` | rw     |
+| Host Path              | Container Path         | Access | Description                |
+| ---------------------- | ---------------------- | ------ | -------------------------- |
+| `~/.claude/`           | `~/.claude/`           | rw     | Settings, history, token   |
+| `~/.claude.json`       | `~/.claude.json`       | rw     | User preferences           |
+| `~/.config/`           | `~/.config/`           | ro     | Statusline, tool configs   |
+| `<project>`            | `<project>`            | rw     | Your working directory     |
+| `/var/run/docker.sock` | `/var/run/docker.sock` | rw     | Docker-in-Docker support   |

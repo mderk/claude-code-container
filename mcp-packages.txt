@@ -2,3 +2,5 @@
 # One command per line. Example:
 # npm install -g @playwright/mcp
 # pip install mcp-server-fetch
+npm install -g @playwright/mcp
+npx playwright install chromium 2>&1

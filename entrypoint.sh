@@ -24,4 +24,8 @@ echo "claude ALL=(ALL) NOPASSWD:ALL" > /etc/sudoers.d/claude
 # Run Claude from host installation
 CLAUDE_BIN="$USER_HOME/.claude/local/node_modules/.bin/claude"
 
-exec sudo -u claude HOME="$USER_HOME" "$CLAUDE_BIN" --dangerously-skip-permissions "$@"
+exec sudo -u claude \
+    HOME="$USER_HOME" \
+    CLAUDE_CODE_OAUTH_TOKEN="$CLAUDE_CODE_OAUTH_TOKEN" \
+    DOCKER_HOST="$DOCKER_HOST" \
+    "$CLAUDE_BIN" --dangerously-skip-permissions "$@"

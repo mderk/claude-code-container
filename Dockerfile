@@ -65,7 +65,9 @@ RUN ln -sf /usr/bin/batcat /usr/local/bin/bat && \
     ln -sf /usr/bin/fdfind /usr/local/bin/fd
 
 # Install uv (fast Python package manager)
-RUN curl -LsSf https://astral.sh/uv/install.sh | sh && \
+RUN for i in 1 2 3 4 5; do \
+        curl -LsSf https://astral.sh/uv/install.sh | sh && break || sleep 5; \
+    done && \
     mv /root/.local/bin/uv /usr/local/bin/uv && \
     mv /root/.local/bin/uvx /usr/local/bin/uvx
 
